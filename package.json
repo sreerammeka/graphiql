@@ -3,15 +3,8 @@
   "license": "MIT",
   "workspaces": [
     "packages/*",
-    "packages/examples/*"
+    "examples/*"
   ],
-  "browserify-shim": {
-    "react": "global:React",
-    "react-dom": "global:ReactDOM"
-  },
-  "browser": {
-    "copy-to-clipboard": "./node-modules/copy-to-clipboard/index.js"
-  },
   "husky": {
     "hooks": {
       "pre-commit": "yarn lint",
@@ -20,14 +13,14 @@
   },
   "scripts": {
     "build": "yarn run build-clean && yarn build-ts && yarn build-js",
-    "build-js": "lerna run build --scope codemirror-graphql --scope graphql-language-service-server --scope graphiql graphql-language-service",
+    "build-js": "lerna run build --scope codemirror-graphql --scope graphql-language-service-server --scope graphiql --scope graphql-language-service",
     "build-ts": "tsc --build",
-    "build-clean": "tsc --build --clean && rm -rf 'packages/**/src/{dist,esm,bundle}' && lerna run build-clean --parallel",
+    "build-clean": "tsc --build --clean && rm -rf '{packages,examples}/**/src/{dist,esm,bundle}' && lerna run build-clean",
     "build-demo": "lerna run build-demo",
     "build-bundles": "lerna run build-bundles",
     "test": "yarn run lint && yarn run check && yarn run build && yarn run testonly && yarn build-bundles && yarn run e2e && yarn build-demo",
-    "testonly": "jest && lerna run test --scope codemirror-graphql",
-    "e2e": "cd packages/graphiql && yarn e2e",
+    "testonly": "jest && yarn workspace codemirror-graphql test",
+    "e2e": "yarn workspace graphiql e2e",
     "cypress-open": "yarn workspace graphiql cypress-open",
     "t": "yarn run testonly",
     "lint": "eslint --ext=ts,js,jsx,tsx . || (printf '\\033[33mTry: \\033[7m yarn format \\033[0m\\n' && exit 1)",
